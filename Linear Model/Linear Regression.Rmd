@@ -1,0 +1,23 @@
+---
+title: "Linear Regression"
+author: "Clinton Moshe"
+date: "9/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+```{r}
+plot(pressure)
+```
+
