@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Loading The data andd packages
+## Loading The data and packages
 
 ```{r data and packages}
 # load the packages
@@ -21,9 +21,92 @@ train <- read_csv('data/train.csv')[-1]
 test <- read_csv('data/test.csv')[-1]
 ```
 
-## Including Plots
+## Data Preparation
+
+```{r data prep}
+colnames(train)
+colnames(test)
+# study the data
+str(train)
+str(test)
+
+## dealing with the na values
+na_percentage <-(colSums(is.na(train)) / nrow(train)) * 100
+as.data.frame(na_percentage)
+# prepare the data/ split the data
+Index <- createDataPartition(train$SalePrice, p = .8, 
+                                  list = FALSE, 
+                                  times = 1)
+train <- train[Index,]
+val <- train[-Index,]
+
+attach(c(train,val))
+# drop all character and na columns
+train <- train %>%
+          select_if(is.numeric) %>%
+          select(-c(LotFrontage,MasVnrArea,GarageYrBlt))
+as.data.frame(colSums(is.na(train)))
+
+val <- val %>%
+        select_if(is.numeric) %>%
+        select(-c(LotFrontage,MasVnrArea,GarageYrBlt))
+as.data.frame(colSums(is.na(val)))
+
+# fit the model
+model1 <- lm(SalePrice~., data = train)
+summary(model1)
+```
+
+## Standardization and model fiting
+
+```{r standarzation and model fitting}
+# standardize the data
+# mean 0, sd =1
+prep1 <- preProcess(train[,-34], method = c('center','scale'))
+newTrain <- predict(prep1, train[,-34])
+summary(newTrain)
+
+newTrain$SalePrice <- train$SalePrice
+model2 <- lm(SalePrice~., data = newTrain)
+summary(model2)
+```
+
+## normalization and model fitting
+
+```{r nomalization and model fitting}
+
+# normalization
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+
+newTrain1 <- as.data.frame(apply(train[,-34], 2, FUN=normalize))
+newTrain1$SalePrice <- train$SalePrice
+model3 <- lm(SalePrice~., data = newTrain1)
+summary(model3)
+
+```
+
+## removing insignificant variables
+
+```{r removing insignificant variables}
+newTrain2 <- train %>%
+  select(-c(TotalBsmtSF,GrLivArea,LowQualFinSF,EnclosedPorch,MiscVal,
+            GarageArea,MoSold,HalfBath,BsmtUnfSF,YearRemodAdd,BsmtFinSF2,YrSold,`3SsnPorch`
+            ,BsmtHalfBath,OpenPorchSF,Fireplaces))
+
+# normalize
+newTrain2 <- as.data.frame(apply(newTrain2[,-18], 2, normalize))
+newTrain2$SalePrice <- newTrain$SalePrice
+model4 <- lm(
+  SalePrice~., data = newTrain2)
+summary(model4)
+
+```
+
+## validation and predictions
 
 ```{r}
-plot(pressure)
+
 ```
 
