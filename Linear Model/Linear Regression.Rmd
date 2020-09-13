@@ -9,10 +9,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Loading The data andd packages
 
-```{r cars}
-summary(cars)
+```{r data and packages}
+# load the packages
+library(tidyverse)
+library(caret)
+
+# load the data
+train <- read_csv('data/train.csv')[-1]
+test <- read_csv('data/test.csv')[-1]
 ```
 
 ## Including Plots
