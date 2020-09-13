@@ -93,10 +93,10 @@ summary(model3)
 newTrain2 <- train %>%
   select(-c(TotalBsmtSF,GrLivArea,LowQualFinSF,EnclosedPorch,MiscVal,
             GarageArea,MoSold,HalfBath,BsmtUnfSF,YearRemodAdd,BsmtFinSF2,YrSold,`3SsnPorch`
-            ,BsmtHalfBath,OpenPorchSF,Fireplaces))
+            ,BsmtHalfBath,OpenPorchSF,Fireplaces,PoolArea))
 
 # normalize
-newTrain2 <- as.data.frame(apply(newTrain2[,-18], 2, normalize))
+newTrain2 <- as.data.frame(apply(newTrain2[,-17], 2, normalize))
 newTrain2$SalePrice <- newTrain$SalePrice
 model4 <- lm(
   SalePrice~., data = newTrain2)
@@ -135,4 +135,18 @@ modelTrain1
 summary(modelTrain1)
 ```
 
+## testing the model on the test set
+
+```{r}
+testData  <- test %>%
+  select(MSSubClass,LotArea,starts_with('Overall'),YearBuilt,BsmtFinSF1,
+         ends_with(c('FlrSF','AbvGr')),BsmtFullBath,FullBath,TotRmsAbvGrd,
+         GarageCars,WoodDeckSF,ScreenPorch) %>%
+  drop_na()
+summary(testData)
+
+testData <- as.data.frame(apply(testData, 2, normalize))
+pred <- predict(model4, newdata = testData)
+pred
+```
 
