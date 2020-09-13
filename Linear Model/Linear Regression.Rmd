@@ -106,7 +106,33 @@ summary(model4)
 
 ## validation and predictions
 
-```{r}
+```{r validation and predictions}
+valData  <- val %>%
+  select(MSSubClass,LotArea,starts_with('Overall'),YearBuilt,BsmtFinSF1,
+         ends_with(c('FlrSF','AbvGr')),BsmtFullBath,FullBath,TotRmsAbvGrd,
+         GarageCars,WoodDeckSF,ScreenPorch)
+summary(valData)
+as.data.frame(colSums(is.na(valData)))
+
+valData <- as.data.frame(apply(valData, 2, normalize))
+valData$SalePrice <- val$SalePrice
+pred <- predict(model4, newdata = valData)
+pred
+
+# adding the sale Price
+submitData <- data.frame(predictions=pred, Actual=val$SalePrice)
+submitData 
 
 ```
+
+## cross validation
+
+```{r cross validation}
+modelTrain1 <- train(SalePrice~., data=newTrain2, method="lm",
+                     tuneLength=10, trControl=trainControl(method = "cv"))
+
+modelTrain1
+summary(modelTrain1)
+```
+
 
