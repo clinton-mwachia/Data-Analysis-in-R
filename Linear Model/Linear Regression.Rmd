@@ -74,7 +74,6 @@ summary(model2)
 ## normalization and model fitting
 
 ```{r nomalization and model fitting}
-
 # normalization
 normalize <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
@@ -122,7 +121,6 @@ pred
 # adding the sale Price
 submitData <- data.frame(predictions=pred, Actual=val$SalePrice)
 submitData 
-
 ```
 
 ## cross validation
