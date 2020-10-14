@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r data}
 library(tidyverse)
+library(caret)
 
 AdmData <- read_csv('data/Admission_Predict_Ver1.1.csv')[-1]
 str(AdmData)
@@ -30,12 +31,19 @@ AdmData_1 <- AdmData %>%
   )
 str(AdmData_1)
 summary(AdmData_1)
+
+# confirming NA/MISSING DATA
+colSums(is.na(AdmData_1))
+
+# split the data
+
 ```
 
 ## Exploratory Data Analaysis
 
 ```{r EDA}
 
-
 ```
+## Modelling
+
 
