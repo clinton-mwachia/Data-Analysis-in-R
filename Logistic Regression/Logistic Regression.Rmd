@@ -1,0 +1,41 @@
+---
+title: "Logistic Regression"
+author: "Clinton Moshe"
+date: "10/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading the Data and packages
+
+```{r data}
+library(tidyverse)
+
+AdmData <- read_csv('data/Admission_Predict_Ver1.1.csv')[-1]
+str(AdmData)
+summary(AdmData)
+```
+
+## Data Preparation
+
+```{r data prep}
+AdmData_1 <- AdmData %>%
+  mutate(
+    `University Rating` = as_factor(`University Rating`),
+    `Research` = as_factor(`Research`),
+    `SOP` = as_factor(`SOP`)
+  )
+str(AdmData_1)
+summary(AdmData_1)
+```
+
+## Exploratory Data Analaysis
+
+```{r EDA}
+
+
+```
+
