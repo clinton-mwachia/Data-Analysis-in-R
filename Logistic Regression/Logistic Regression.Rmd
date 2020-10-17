@@ -36,7 +36,12 @@ summary(AdmData_1)
 colSums(is.na(AdmData_1))
 
 # split the data
+AdmData_1$`Chance of Admit` <- ifelse(AdmData_1$`Chance of Admit` >0.45,1,0)
 
+index <- createDataPartition(AdmData_1$`Chance of Admit`,list = FALSE, p=0.8)
+index = as_vector(index)
+train <- AdmData_1[index,]
+test <- AdmData_1[-index,]
 ```
 
 ## Exploratory Data Analaysis
@@ -46,4 +51,22 @@ colSums(is.na(AdmData_1))
 ```
 ## Modelling
 
+```{r modelling}
+attach(train)
+model1 <- glm(`Chance of Admit`~., 
+              data = AdmData_1, 
+              family = poisson(link = "log"))
+summary(model1)
+```
+
+## making predictions
+
+```{r predictions}
+pred1 <- predict(model1, newdata = test, type = "response")
+pred1 <- ifelse(pred1 >=0.55,1,0)
+
+df <- data.frame(pred1, test$`Chance of Admit`)
+df
+confusionMatrix(as_factor(test$`Chance of Admit`), as_factor(pred1))
+```
 
