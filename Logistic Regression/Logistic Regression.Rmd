@@ -13,16 +13,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r data}
 library(tidyverse)
-library(caret)
+library(caret) # tuning, splitting the data etc
 
 AdmData <- read_csv('data/Admission_Predict_Ver1.1.csv')[-1]
 str(AdmData)
+# we will convert them appropriately later on
 summary(AdmData)
 ```
 
 ## Data Preparation
 
 ```{r data prep}
+# converting them into the correct data types
+# i have renamed(AdmData --> AdmData_1) to preserve the original data
 AdmData_1 <- AdmData %>%
   mutate(
     `University Rating` = as_factor(`University Rating`),
@@ -32,44 +35,57 @@ AdmData_1 <- AdmData %>%
 str(AdmData_1)
 summary(AdmData_1)
 
-# confirming NA/MISSING DATA
-colSums(is.na(AdmData_1))
-AdmData_1$`Chance of Admit`
+# checking NA/MISSING DATA
+colSums(is.na(AdmData_1)) # no NA values
+AdmData_1$`Chance of Admit` # to help me choose a representative threshold
 
 # split the data
 AdmData_1$`Chance of Admit` <- ifelse(AdmData_1$`Chance of Admit` >0.7,1,0)
 
+# index to split
 index <- createDataPartition(AdmData_1$`Chance of Admit`,list = FALSE, p=0.8)
 index = as_vector(index)
 train <- AdmData_1[index,]
 test <- AdmData_1[-index,]
+# more training data for better examples for the model to learn from
 ```
 
 ## Exploratory Data Analaysis
 
 ```{r EDA}
+# i willnot do EDA(exploratory data analysis but you can do it here)
+# use ggplot2, it is already loaded.
 
 ```
+
 ## Modelling
 
 ```{r modelling}
+# adding the train data into the search path
 attach(train)
 model1 <- glm(`Chance of Admit`~., 
               data = AdmData_1, 
               family = poisson(link = "log"))
 summary(model1)
+# make many models for the sake of choosing the better model
+# i am going to use model1 to predict for this video
 ```
 
 ## making predictions
 
 ```{r predictions}
-options(scipen=999)
+options(scipen=999) # disable scientifc notation
 pred1 <- predict(model1, newdata = test, type = "response")
 pred1 <- ifelse(pred1 >=0.7,1,0)
 
+# making comparison
 df <- data.frame(pred1, test$`Chance of Admit`)
 df
 tb <- table(test$`Chance of Admit`, pred1)
 confusionMatrix(tb)
 ```
-
+# you can create another model and try to tune using caret package..
+# also try to normalize, standardize the data to see if it will have any
+# impact on the performance of the model.
+# i will leave the link on the description below
+# THANKS GUYS AND REMEMBER TO SUBSCRIBE AND SHARE.
