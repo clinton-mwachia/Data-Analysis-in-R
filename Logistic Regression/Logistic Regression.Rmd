@@ -34,9 +34,10 @@ summary(AdmData_1)
 
 # confirming NA/MISSING DATA
 colSums(is.na(AdmData_1))
+AdmData_1$`Chance of Admit`
 
 # split the data
-AdmData_1$`Chance of Admit` <- ifelse(AdmData_1$`Chance of Admit` >0.45,1,0)
+AdmData_1$`Chance of Admit` <- ifelse(AdmData_1$`Chance of Admit` >0.7,1,0)
 
 index <- createDataPartition(AdmData_1$`Chance of Admit`,list = FALSE, p=0.8)
 index = as_vector(index)
@@ -62,11 +63,13 @@ summary(model1)
 ## making predictions
 
 ```{r predictions}
+options(scipen=999)
 pred1 <- predict(model1, newdata = test, type = "response")
-pred1 <- ifelse(pred1 >=0.55,1,0)
+pred1 <- ifelse(pred1 >=0.7,1,0)
 
 df <- data.frame(pred1, test$`Chance of Admit`)
 df
-confusionMatrix(as_factor(test$`Chance of Admit`), as_factor(pred1))
+tb <- table(test$`Chance of Admit`, pred1)
+confusionMatrix(tb)
 ```
 
