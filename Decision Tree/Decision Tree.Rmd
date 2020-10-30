@@ -89,3 +89,11 @@ plot(model3)
 
 ```
 
+## predictions
+
+```{r predictions}
+# making predictions
+pred <- predict(model3, newdata=test)
+pred
+```
+
