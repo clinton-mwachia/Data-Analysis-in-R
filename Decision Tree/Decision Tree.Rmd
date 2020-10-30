@@ -1,5 +1,5 @@
 ---
-title: "Decision Tree"
+title: "Decision Tree with R and RStudio"
 author: "Clinton Moshe"
 date: "10/30/2020"
 output: html_document
@@ -13,8 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r Data and packages}
 library(tidyverse)
-library(party)
-library(caret)
+library(party) # decision tree
+library(caret) # tuning
+
+# i am using the same data i used in logistic regression
 
 # reading the data
 AdmData <- read_csv('data/Admission_Predict_Ver1.1.csv')[-1]
@@ -50,12 +52,15 @@ index = as_vector(index)
 train <- AdmData_1[index,]
 test <- AdmData_1[-index,]
 # more training data for better examples for the model to learn from
+
+# i am using the same preprocessing as used in the logistic regression
 ```
 
 ## Exploratory Data Analaysis
 
 ```{r EDA}
 # check out my data viz series and you can make some awesome EDA
+# i will leave the link in the description below
 ```
 
 ## Modelling
@@ -64,6 +69,7 @@ test <- AdmData_1[-index,]
 # adding then data to the search path
 attach(AdmData_1)
 
+# using the decision trees to decide if a candidate fits to join the masters program
 model1 <- ctree(`Chance of Admit`~., data = AdmData_1)
 model1
 plot(model1)
@@ -72,7 +78,7 @@ plot(model1)
 ##modelling 2
 
 ```{r modelling2}
-# reducing the variablles for better plot
+# reducing the variables for better plot
 model2 <- ctree(`Chance of Admit`~ `University Rating` + `GRE Score`+ `TOEFL Score`, data = AdmData_1)
 model2
 plot(model2)
@@ -95,5 +101,12 @@ plot(model3)
 # making predictions
 pred <- predict(model3, newdata=test)
 pred
+
+# comparison with actual values
+pred <- ifelse(pred > 0.7, 1, 0)
+df <- data.frame(pred, test$`Chance of Admit`)
+df
+table(df)
+# now i will commit the changes i have made.
 ```
 
