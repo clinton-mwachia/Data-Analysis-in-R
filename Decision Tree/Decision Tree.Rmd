@@ -1,0 +1,66 @@
+---
+title: "Decision Tree"
+author: "Clinton Moshe"
+date: "10/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading the Data and packages
+
+```{r Data and packages}
+library(tidyverse)
+library(party)
+library(caret)
+
+# reading the data
+AdmData <- read_csv('data/Admission_Predict_Ver1.1.csv')[-1]
+# structure of the data
+str(AdmData)
+# summary stats
+summary(AdmData)
+```
+## Data Preparation
+
+```{r Data Prep}
+# converting them into the correct data types
+# i have renamed(AdmData --> AdmData_1) to preserve the original data
+AdmData_1 <- AdmData %>%
+  mutate(
+    `University Rating` = as_factor(`University Rating`),
+    `Research` = as_factor(`Research`),
+    `SOP` = as_factor(`SOP`)
+  )
+str(AdmData_1)
+summary(AdmData_1)
+
+# checking NA/MISSING DATA
+colSums(is.na(AdmData_1)) # no NA values
+AdmData_1$`Chance of Admit` # to help me choose a representative threshold
+
+# split the data
+AdmData_1$`Chance of Admit` <- ifelse(AdmData_1$`Chance of Admit` >0.7,1,0)
+
+# index to split
+index <- createDataPartition(AdmData_1$`Chance of Admit`,list = FALSE, p=0.8)
+index = as_vector(index)
+train <- AdmData_1[index,]
+test <- AdmData_1[-index,]
+# more training data for better examples for the model to learn from
+```
+
+## Exploratory Data Analaysis
+
+```{r EDA}
+# check out my data viz series and you can make some awesome
+```
+
+## Modelling
+
+```{r modelling}
+
+```
+
