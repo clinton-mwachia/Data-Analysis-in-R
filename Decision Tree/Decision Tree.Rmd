@@ -55,12 +55,37 @@ test <- AdmData_1[-index,]
 ## Exploratory Data Analaysis
 
 ```{r EDA}
-# check out my data viz series and you can make some awesome
+# check out my data viz series and you can make some awesome EDA
 ```
 
 ## Modelling
 
 ```{r modelling}
+# adding then data to the search path
+attach(AdmData_1)
+
+model1 <- ctree(`Chance of Admit`~., data = AdmData_1)
+model1
+plot(model1)
+```
+
+##modelling 2
+
+```{r modelling2}
+# reducing the variablles for better plot
+model2 <- ctree(`Chance of Admit`~ `University Rating` + `GRE Score`+ `TOEFL Score`, data = AdmData_1)
+model2
+plot(model2)
+```
+
+## modelling 3
+
+```{r modelling 3}
+# convert the response into categorical
+AdmData_1$`Chance of Admit` <- ifelse(AdmData_1$`Chance of Admit` >0.7, 1, 0)
+model3 <- ctree(`Chance of Admit`~., data = AdmData_1)
+model3
+plot(model3)
 
 ```
 
