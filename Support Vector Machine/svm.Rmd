@@ -30,5 +30,53 @@ str(wine_quality)
 colSums(is.na(wine_quality))
 # plotting NA values
 plot_missing(wine_quality)
-
 ```
+
+## Exploratory Data Analysis
+
+```{r EDA}
+# alcohol
+# skewed
+ggplot(data = wine_quality) +
+  geom_histogram(aes(alcohol), bins = 20) +
+  ggtitle('distribution of alcohol')
+
+# density plot
+ggplot(data = wine_quality) +
+  geom_density(aes(x=alcohol))
+
+ggplot(data = wine_quality) +
+  geom_histogram(aes(log(alcohol)), bins = 20) 
+
+# sulphates
+ggplot(data = wine_quality) +
+  geom_histogram(aes(sulphates), bins = 20)
+# pH
+ggplot(data = wine_quality) +
+  geom_histogram(aes(pH), bins = 20)
+# density
+ggplot(data = wine_quality) +
+  geom_histogram(aes(density), bins = 20)
+# total sulfur dioxide
+ggplot(data = wine_quality) +
+  geom_histogram(aes(`total sulfur dioxide`), bins = 20)
+# free sulfur dioxide
+ggplot(data = wine_quality) +
+  geom_histogram(aes(`free sulfur dioxide`), bins = 20)
+# chlorides
+ggplot(data = wine_quality) +
+  geom_histogram(aes(chlorides), bins = 20)
+# residual sugar
+ggplot(data = wine_quality) +
+  geom_histogram(aes(`residual sugar`), bins = 20)
+# citric acid
+ggplot(data = wine_quality) +
+  geom_histogram(aes(`citric acid`), bins = 20)
+# volatile acidity
+ggplot(data = wine_quality) +
+  geom_histogram(aes(`volatile acidity`), bins = 20)
+# fixed acidity
+ggplot(data = wine_quality) +
+  geom_histogram(aes(`fixed acidity`), bins = 20)
+```
+
