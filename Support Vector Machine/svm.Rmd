@@ -21,6 +21,8 @@ library(DataExplorer)
 wine_quality <- read_csv('data/winequality-red.csv')
 summary(wine_quality)
 str(wine_quality)
+
+wine_quality$quality <- as.factor(wine_quality$quality)
 ```
 
 ## Analysis eg NA ...
@@ -84,5 +86,29 @@ ggplot(data = wine_quality) +
 # outliers
 ggplot(data = wine_quality)+
   geom_boxplot(aes(y=`fixed acidity`))
+```
+
+## Data Splitting
+
+```{r data splitting}
+index <- createDataPartition(wine_quality$quality, p=0.75, list = FALSE)
+train <- wine_quality[index,]
+test <- wine_quality[-index,]
+```
+
+## modelling
+
+```{r model1}
+# names(getModelInfo())
+library(kernlab)
+model1 <- train(quality~., data=train, 
+                preProcess=c("scale","center"),
+                method='svmRadial')
+model1
+
+pred1 <- predict(model1, newdata = test)
+pred1
+
+confusionMatrix(pred1,test$quality)
 ```
 
