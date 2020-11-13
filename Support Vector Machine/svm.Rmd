@@ -35,6 +35,7 @@ plot_missing(wine_quality)
 ## Exploratory Data Analysis
 
 ```{r EDA}
+# plotting individual varibales
 # alcohol
 # skewed
 ggplot(data = wine_quality) +
@@ -78,5 +79,10 @@ ggplot(data = wine_quality) +
 # fixed acidity
 ggplot(data = wine_quality) +
   geom_histogram(aes(`fixed acidity`), bins = 20)
+
+## box plot
+# outliers
+ggplot(data = wine_quality)+
+  geom_boxplot(aes(y=`fixed acidity`))
 ```
 
