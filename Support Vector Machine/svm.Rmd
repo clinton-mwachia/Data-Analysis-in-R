@@ -16,12 +16,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r data and packages}
 library(tidyverse)
 library(caret)
-library(DataExplorer)
+library(DataExplorer) # plotting the missing data
 
+# reading the data
 wine_quality <- read_csv('data/winequality-red.csv')
 summary(wine_quality)
 str(wine_quality)
 
+# converting the quality variable into categorical
 wine_quality$quality <- as.factor(wine_quality$quality)
 ```
 
@@ -29,7 +31,7 @@ wine_quality$quality <- as.factor(wine_quality$quality)
 
 ```{r Analysis}
 # handling NA values
-colSums(is.na(wine_quality))
+colSums(is.na(wine_quality))# no NA values
 # plotting NA values
 plot_missing(wine_quality)
 ```
@@ -37,7 +39,7 @@ plot_missing(wine_quality)
 ## Exploratory Data Analysis
 
 ```{r EDA}
-# plotting individual varibales
+# plotting individual variables
 # alcohol
 # skewed
 ggplot(data = wine_quality) +
@@ -86,11 +88,18 @@ ggplot(data = wine_quality) +
 # outliers
 ggplot(data = wine_quality)+
   geom_boxplot(aes(y=`fixed acidity`))
+
+# most of these variables are skewed.
+# we will fit the model as it is and the you will transform them later 
+# on to see the effect
+# try experimenting on your own, for the sake of this video i will not
 ```
 
 ## Data Splitting
 
 ```{r data splitting}
+# splitting the data
+# train 75% and test 25%
 index <- createDataPartition(wine_quality$quality, p=0.75, list = FALSE)
 train <- wine_quality[index,]
 test <- wine_quality[-index,]
