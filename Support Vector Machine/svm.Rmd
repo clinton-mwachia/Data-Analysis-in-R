@@ -111,4 +111,3 @@ pred1
 
 confusionMatrix(pred1,test$quality)
 ```
-
