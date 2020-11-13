@@ -108,15 +108,18 @@ test <- wine_quality[-index,]
 ## modelling
 
 ```{r model1}
-# names(getModelInfo())
+# names(getModelInfo()), gives a list of the methods you can use
 library(kernlab)
 model1 <- train(quality~., data=train, 
                 preProcess=c("scale","center"),
                 method='svmRadial')
 model1
-
+# making the predictions
 pred1 <- predict(model1, newdata = test)
 pred1
 
 confusionMatrix(pred1,test$quality)
 ```
+
+## you can improve the model by handling the skewed variables and the outliers.
+ thanks for watching.
