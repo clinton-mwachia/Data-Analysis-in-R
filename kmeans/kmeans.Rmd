@@ -1,0 +1,104 @@
+---
+title: "kmeans"
+author: "clinton Moshe"
+date: "8/9/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+```{r}
+library(tidyverse)
+library(factoextra)
+library(caret)
+```
+
+## The data
+
+```{r}
+data('iris')
+head(iris, 4)
+
+# imbalance data set
+table(iris$Species)
+
+# summary stat
+summary(iris)
+```
+
+
+## EDA
+
+## ggplot2
+
+## clustering
+
+```{r}
+# excluding the species variable
+# data[r,c]
+mydata <- iris[,-5]
+
+kmmodel <- kmeans(mydata, centers = 2)
+kmmodel
+
+# clusters
+kmmodel$cluster
+
+# centers
+kmmodel$centers
+
+# withinss
+kmmodel$withinss
+
+# k = 3
+kmmodel2 <- kmeans(mydata, centers = 3)
+kmmodel2
+
+# clusters
+kmmodel2$cluster
+
+# centers
+kmmodel2$centers
+
+# withinss
+kmmodel2$withinss
+```
+
+## choosing the optimal number of clusters
+
+1. Elbow method/ within sum of squares.
+2. Alverage silhoutte.
+3. gap statistics.
+
+```{r}
+fviz_nbclust(mydata, kmeans, method = "wss")
+```
+
+```{r}
+fviz_nbclust(mydata, kmeans, method = "silhouette")
+```
+
+```{r}
+fviz_nbclust(mydata, kmeans, method = "gap_stat")
+```
+
+## plot the best model with original data
+
+```{r}
+fviz_cluster(kmmodel, data = mydata, axes = c(1,3))
+```
+
+## combining the data with the clusters
+
+```{r}
+df = cbind(mydata, cluster = kmmodel$cluster)
+head(df,3)
+```
+
+# caret training
+
+
