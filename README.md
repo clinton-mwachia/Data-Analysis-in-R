@@ -1,4 +1,4 @@
-# Machine-learning-with-R
+# Data-Wars-in-R
 
 1. Adaboost
 2. Decision Tree
