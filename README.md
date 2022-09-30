@@ -1,5 +1,11 @@
-# Data-Wars-in-R
+# Data Analysis in R
 
+This repository includes analysis done in R including: -
+- Machine learning.
+- Data visualization.
+- Data Cleaning.
+
+## Machine Learning.
 1. Adaboost
 2. Decision Tree
 3. Kmeans
