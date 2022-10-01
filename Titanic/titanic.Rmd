@@ -1,0 +1,190 @@
+---
+title: "Titanic Analysis And ML"
+author: "Clinton Mwachia"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE,warning=FALSE)
+
+# loading the libraries
+library(tidyverse)
+library(DataExplorer)
+library(caret)
+```
+
+# The Data
+
+## Train Data
+
+```{r train-data}
+train = read_csv("data/train.csv")
+
+summary(train)
+```
+
+## Test Data
+
+```{r test-data}
+test = read_csv("data/test.csv")
+
+summary(test)
+```
+
+Most of the variables are not in the appropriate data types, lets transform them.
+survived, pclass, sex etc and all character should be factor
+
+## Data transformation
+
+```{r data-transform}
+train_transform = train
+
+train_transform = train_transform %>%
+  mutate_if(is.character, as.factor) %>%
+  mutate(
+    Survived = as.factor(Survived),
+    Pclass = as.factor(Pclass),
+    SibSp = as.factor(SibSp),
+    Parch = as.factor(Parch)
+  )
+```
+
+## Missing Data
+
+```{r missing-data}
+colSums(is.na(train_transform))
+
+# visualize this.
+plot_missing(train_transform)
+```
+
+Lets drop column transform, too many missing data points. We will also drop name
+and ticket columns. Lets also drop missing data points,(You can try imputing them and then compare results to see if it improves the model).
+
+```{r drop-na}
+train_transform = train_transform %>%
+  select(-c(Name, Cabin, Ticket)) %>%
+  na.omit()
+```
+
+
+```{r}
+colSums(is.na(train_transform))
+
+# visualize this.
+plot_missing(train_transform)
+```
+
+## EDA: Most of the survivors were female
+
+Lets find out if this is true
+
+```{r}
+train_transform %>%
+  group_by(Sex, Survived) %>%
+  count() %>%
+  ggplot(aes(Sex, n, fill=Survived)) +
+  geom_bar(position = "dodge", stat="identity") +
+  theme_bw()
+```
+
+
+    - Most of the survivors were female.
+    - Most of the male passengers died.
+    - Female passengers have higher chances of survival.
+    
+    
+## EDA: Passengers with first class ticket have higher survival rates
+
+```{r}
+train_transform %>%
+  group_by(Pclass, Survived) %>%
+  count() %>%
+  ggplot(aes(Pclass, n, fill=Survived)) +
+  geom_bar(position = "dodge", stat="identity") +
+  theme_bw()
+```
+
+    - Most survivors were from the first class.
+    - Most of the deaths were from the 3rd class.
+    - 1st class passengers had the highest survival rates.
+    - 3rd class passengers had the highest death rates.
+
+
+## EDA: AGE, FARE BY SURVIVAL
+
+```{r}
+train_transform %>%
+  select(Age, Fare, Survived) %>%
+  ggplot(aes(Age, log(Fare), color=Survived)) +
+  geom_point() +
+  theme_bw()
+```
+
+## EDA: Check for outliers
+
+```{r}
+par(mfrow=c(1,2))
+ggplot(train_transform, aes(y=Age)) +
+  geom_boxplot() +
+  theme_bw()
+
+ggplot(train_transform, aes(y=Fare)) +
+  geom_boxplot() +
+  theme_bw()
+```
+
+    - Both Age na fare have outliers.
+    
+You can do more EDA, we wIll stop here for now.
+
+# Modelling
+
+## Splitting the Data
+
+we will split the train data into train and test for training and evaluation.
+
+```{r}
+index = createDataPartition(train_transform$Survived, p=.8, list = F)
+
+train = train_transform[index,]
+test = train_transform[-index,]
+```
+
+## Random Forest Model
+
+```{r rf}
+# names(getModelInfo()), list of the methods
+rf = train(Survived~., data=train, method = "rf", metric="Accuracy")
+```
+
+```{r}
+pred = predict(rf, newdata = test)
+
+tb = table(pred, test$Survived)
+
+confusionMatrix(tb)
+```
+
+## RPART MODEL
+
+```{r rf}
+# names(getModelInfo()), list of the methods
+rpart = train(Survived~., data=train, method = "rpart", metric="Accuracy")
+```
+
+```{r}
+pred1 = predict(rpart, newdata = test)
+
+tb1 = table(pred1, test$Survived)
+
+confusionMatrix(tb1)
+```
+
+
+
+    - Random forest has the highest accuracy.
+    THANKS FR WATCHING.
