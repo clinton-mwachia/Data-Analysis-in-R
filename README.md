@@ -14,3 +14,6 @@ This repository includes analysis done in R including: -
 6. Naive Bayes
 7. Random Forest
 8. Support Vector Machines
+
+## Data Analysis
+1. Titanic Analysis.
